@@ -6,6 +6,8 @@ import routes from '~react-pages'
 
 import './main.css'
 
+import "./lib/firebase"
+
 const App = () => {
   return (
     <Suspense fallback={<p>Loading...</p>}>
