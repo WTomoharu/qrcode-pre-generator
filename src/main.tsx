@@ -8,13 +8,16 @@ import routes from '~react-pages'
 
 import "./lib/firebase"
 import './main.css'
+import { FirebaseAuthProvider } from './hook/firebase-auth'
 
 const App = () => {
   return (
     <ChakraProvider>
-      <Suspense fallback={<p>Loading...</p>}>
-        {useRoutes(routes)}
-      </Suspense>
+      <FirebaseAuthProvider>
+        <Suspense fallback={<p>Loading...</p>}>
+          {useRoutes(routes)}
+        </Suspense>
+      </FirebaseAuthProvider>
     </ChakraProvider>
   )
 }
