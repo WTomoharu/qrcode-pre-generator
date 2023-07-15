@@ -1,6 +1,6 @@
 import { signOut } from "firebase/auth"
-import { FirebaseAuthProtector } from "../hook/firebase-auth-protector"
-import { auth } from "../lib/firebase"
+import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
+import { auth } from "../../lib/firebase"
 
 export const Page = () => {
   const onClickLogoutButton = () => {
