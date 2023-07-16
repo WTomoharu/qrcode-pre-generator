@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react"
+import { ReactNode } from "react"
 import { User } from "firebase/auth"
 import { useFirebaseAuthContext } from "./firebase-auth"
 import { Button, Center, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Spinner, Text } from "@chakra-ui/react"
@@ -51,7 +51,7 @@ export const FirebaseAuthLoginPopup = () => {
   )
 }
 
-export const FirebaseAuthProtector = (props: { children?: ReactNode | ((user: User) => ReactElement) }) => {
+export const FirebaseAuthProtector = (props: { children?: ReactNode | ((user: User) => ReactNode) }) => {
   const { user } = useFirebaseAuthContext()
 
   if (user === undefined) {
