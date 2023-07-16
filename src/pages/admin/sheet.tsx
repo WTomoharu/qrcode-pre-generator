@@ -1,8 +1,5 @@
-
-import { useEffect } from "react"
-import { useSearchParams } from "react-router-dom"
 import { css, Global } from "@emotion/react"
-import { Button, Center, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Button, Center, SimpleGrid, Text } from "@chakra-ui/react"
 
 import QRCode from "react-qr-code"
 
@@ -52,33 +49,34 @@ const SheetPrintView = () => {
 }
 
 export const Page = () => {
-  const [params, setParams] = useSearchParams()
-
-  const isPrint = params.get("media") === "print"
-
-  useEffect(() => {
-    if (isPrint) {
-      window.print()
-      params.delete("media")
-      setParams(params)
-    }
-  }, [isPrint])
-
   return (
     <>
       <FirebaseAuthProtector>
-        {isPrint ? (
-          <SheetPrintView />
+        {() => (
+          <>
+            <Box css={css`
+              display: none;
 
-        ) : (
-          <div>
-            <Button onClick={() => {
-              params.set("media", "print")
-              setParams(params)
-            }}>
-              印刷
-            </Button>
-          </div>
+              @media print{
+                display: block
+              }
+            `}>
+              <SheetPrintView />
+            </Box>
+            <Box css={css`
+              display: block;
+
+              @media print{
+                display: none;
+              }
+            `}>
+              <Button onClick={() => {
+                window.print()
+              }}>
+                印刷
+              </Button>
+            </Box>
+          </>
         )}
       </FirebaseAuthProtector>
     </>
