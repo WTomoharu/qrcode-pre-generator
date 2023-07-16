@@ -1678,6 +1678,13 @@ babel-plugin-macros@^3.1.0:
     cosmiconfig "^7.0.0"
     resolve "^1.19.0"
 
+base32-encode@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/base32-encode/-/base32-encode-2.0.0.tgz#f029bea7d1db2ecc95df5c1d0a6038a39354029a"
+  integrity sha512-mlmkfc2WqdDtMl/id4qm3A7RjW6jxcbAoMjdRmsPiwQP0ufD4oXItYMnPgVHe80lnAIy+1xwzhHE1s4FoIceSw==
+  dependencies:
+    to-data-view "^2.0.0"
+
 braces@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/braces/-/braces-3.0.2.tgz#3454e1a462ee8d599e236df336cd9ea4f8afe107"
@@ -2816,6 +2823,11 @@ tinycolor2@1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
+
+to-data-view@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-data-view/-/to-data-view-2.0.0.tgz#4cc3f5c9eb59514a7436fc54c587c3c34c9b1d60"
+  integrity sha512-RGEM5KqlPHr+WVTPmGNAXNeFEmsBnlkxXaIfEpUYV0AST2Z5W1EGq9L/MENFrMMmL2WQr1wjkmZy/M92eKhjYA==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
