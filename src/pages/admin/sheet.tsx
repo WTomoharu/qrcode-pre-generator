@@ -1,11 +1,16 @@
 import { css, Global } from "@emotion/react"
 import { Box, Button, Center, SimpleGrid, Text } from "@chakra-ui/react"
+import useSWR from "swr"
 
 import QRCode from "react-qr-code"
 
 import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
 import { getRandomId } from "../../lib/id"
 import { range } from "../../lib/utils"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { doc, getDoc } from "firebase/firestore"
+import { firestore } from "../../lib/firestore"
+import { useEffect } from "react"
 
 const SheetPrintView = () => {
   return (
@@ -49,6 +54,26 @@ const SheetPrintView = () => {
 }
 
 export const Page = () => {
+  const navigate = useNavigate()
+  const [params] = useSearchParams()
+
+  const sheetId = params.get("id")
+
+  if (!sheetId) {
+    navigate("/admin")
+    return
+  }
+
+  useEffect()
+
+  const sheetRef = doc(firestore, "sheets", sheetId)
+
+  const sheet = useSWR(sheetRef.path, () => {
+    return getDoc(sheetRef)
+  }, { suspense: true })
+
+  console.log(sheet)
+
   return (
     <>
       <FirebaseAuthProtector>
@@ -73,6 +98,7 @@ export const Page = () => {
               <Button onClick={() => {
                 window.print()
               }}>
+                {sheet.data.data()!.uid as string}
                 印刷
               </Button>
             </Box>
