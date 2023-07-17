@@ -1,6 +1,7 @@
-import { addDoc, doc, getFirestore, runTransaction } from "firebase/firestore"
+import { addDoc, collection, CollectionReference, doc, getFirestore, runTransaction } from "firebase/firestore"
 import { app } from "./firebase"
 import { getRandomId } from "./id"
+import { Sheet, QRCode } from "./types"
 
 export const firestore = getFirestore(app)
 
@@ -21,3 +22,6 @@ export const addDocSafely: typeof addDoc = (reference, data) => {
     return ref
   })
 }
+
+export const sheetCollection = collection(firestore, "sheets") as CollectionReference<Sheet, Sheet>
+export const qrcodeCollection = collection(firestore, "qrcodes") as CollectionReference<QRCode, QRCode>
