@@ -10,7 +10,6 @@ import { range } from "../../lib/utils"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { firestore } from "../../lib/firestore"
-import { useEffect } from "react"
 
 const SheetPrintView = () => {
   return (
@@ -63,8 +62,6 @@ export const Page = () => {
     navigate("/admin")
     return
   }
-
-  useEffect()
 
   const sheetRef = doc(firestore, "sheets", sheetId)
 
