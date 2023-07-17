@@ -9,7 +9,7 @@ import { getRandomId } from "../../lib/id"
 import { range } from "../../lib/utils"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
-import { firestore } from "../../lib/firestore"
+import { sheetCollection } from "../../lib/firestore"
 
 const SheetPrintView = () => {
   return (
@@ -63,7 +63,7 @@ export const Page = () => {
     return
   }
 
-  const sheetRef = doc(firestore, "sheets", sheetId)
+  const sheetRef = doc(sheetCollection, sheetId)
 
   const sheet = useSWR(sheetRef.path, () => {
     return getDoc(sheetRef)
@@ -95,7 +95,7 @@ export const Page = () => {
               <Button onClick={() => {
                 window.print()
               }}>
-                {sheet.data.data()!.uid as string}
+                {sheet.data.data()!.uid}
                 印刷
               </Button>
             </Box>

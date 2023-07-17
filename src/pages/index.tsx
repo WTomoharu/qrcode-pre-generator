@@ -3,12 +3,12 @@ import { doc, getDoc } from "firebase/firestore"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useSWR from "swr"
 import { CommonStaticModal } from "../component/common-modal"
-import { firestore } from "../lib/firestore"
+import { qrcodeCollection } from "../lib/firestore"
 
 export const QRCodeRedirectPage = (props: { id: string }) => {
   const navigate = useNavigate()
 
-  const qrcodeRef = doc(firestore, "qrcodes", props.id)
+  const qrcodeRef = doc(qrcodeCollection, props.id)
 
   const { data: qrcodeSnapshot } = useSWR(qrcodeRef.path, () => {
     return getDoc(qrcodeRef)
