@@ -12,14 +12,17 @@ import { ButtonWithLoading } from "../../component/button-with-loading"
 import { minTime } from "../../lib/utils"
 import { CommonLayout } from "../../component/common-layout"
 
-type QRCodeEditorModalProps = {
+type QRCodeBaseEditorModalProps = {
   isOpen: boolean
   onClose: () => void
-  qrcode: QRCode,  
+  title: string
+  text?: string
+  button: string
+  qrcode: QRCode,
   onSubmit?: (data: { url: string | null }) => Promise<void> | void
 }
 
-const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
+const QRCodeBaseEditorModal = (props: QRCodeBaseEditorModalProps) => {
   const [url, setUrl] = useState(props.qrcode.url ?? "")
 
   return (
@@ -30,9 +33,14 @@ const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          QRコードの編集
+          {props.title}
         </ModalHeader>
         <ModalBody pb={6}>
+          {props.text && (
+            <Text>
+              {props.text}
+            </Text>
+          )}
           <FormControl mt={4}>
             <FormLabel>URL</FormLabel>
             <Input
@@ -50,17 +58,17 @@ const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
               props.onClose()
             })
           }}>
-            変更する
+            {props.button}
           </ButtonWithLoading>
         </ModalFooter>
       </ModalContent>
     </Modal>
   )
-
 }
 
 const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string }) => {
-  const [isOpenEditorModal, setIsOpenEditorModal] = useState(props.mode === "edit_url")
+  const [isOpenSetterModal, setIsOpenSetterModal] = useState(props.mode === "edit_url")
+  const [isOpenEditorModal, setIsOpenEditorModal] = useState(false)
 
   const navigate = useNavigate()
 
@@ -77,6 +85,22 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
       <CommonStaticModal title="エラー">
         <Text mb="4">
           指定されたQRコードは存在しません。
+        </Text>
+        <Button
+          onClick={() => {
+            navigate("/")
+          }}
+          width="full"
+        >
+          トップページに戻る
+        </Button>
+      </CommonStaticModal>
+    )
+  } else if (qrcodeData.uid !== props.uid && !qrcodeData.url && props.mode === "edit_url") {
+    return (
+      <CommonStaticModal title="エラー">
+        <Text mb="4">
+          このQRコードはURLが設定されておりません。
         </Text>
         <Button
           onClick={() => {
@@ -128,9 +152,26 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
         >
           QRコードのリンクURLを編集
         </Button>
-        <QRCodeEditorModal
+        <QRCodeBaseEditorModal
+          isOpen={isOpenSetterModal && !qrcodeData.url}
+          onClose={() => setIsOpenSetterModal(false)}
+          title={"QRコードのリンクURLを設定"}
+          text={"このリンクには、リンクURLが設定されていません。"}
+          button={"設定する"}
+          qrcode={qrcodeData}
+          onSubmit={(data) => {
+            return minTime(updateDoc(qrcodeRef, {
+              url: data.url ? data.url : null
+            }), 500).catch(err => {
+              console.error(err)
+            })
+          }}
+        />
+        <QRCodeBaseEditorModal
           isOpen={isOpenEditorModal}
           onClose={() => setIsOpenEditorModal(false)}
+          title={"QRコードのリンクURLを編集"}
+          button={"保存する"}
           qrcode={qrcodeData}
           onSubmit={(data) => {
             return minTime(updateDoc(qrcodeRef, {
