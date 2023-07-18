@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react"
+import { Heading, Text } from "@chakra-ui/react"
 import { signOut } from "firebase/auth"
 import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
 import { auth } from "../../lib/firebase"
@@ -14,12 +14,12 @@ async function logout() {
 }
 
 async function createSheet(uid: string) {
-  const sheet = await addDocSafely(collection(firestore, "/sheets"), { 
+  const sheet = await addDocSafely(collection(firestore, "/sheets"), {
     uid,
   })
 
   const qrcodes = await Promise.all(range(5).map(() => {
-    return addDocSafely(collection(firestore, "/qrcodes"), { 
+    return addDocSafely(collection(firestore, "/qrcodes"), {
       uid,
       sheet: sheet.id,
       url: null
@@ -38,22 +38,40 @@ export const Page = () => {
   return (
     <CommonLayout>
       <FirebaseAuthProtector>
-        {(user) => (
-            <>
-              <h1>
-                管理者ページ ({user.email})
-              </h1>
-              <div>
-                <Button onClick={logout}>ログアウト</Button>
-              </div>
-              <div>
-                <ButtonWithLoading onClick={async () => {
-                  const sheet = await createSheet(user.uid)
-                  navigate(`/admin/sheet?id=${sheet}`)
-                }}>QRコードシートを作成</ButtonWithLoading>
-              </div>
-            </>
-          )}
+        {user => (
+          <>
+            <Heading
+              fontSize="2xl"
+              textAlign="center"
+              py="2"
+            >
+              管理者ページ
+            </Heading>
+            <Text
+              textAlign="center"
+              pb="4"
+            >
+              {user.email}でログイン中
+            </Text>
+            <ButtonWithLoading
+              width="full"
+              m="2"
+              onClick={async () => {
+                const sheet = await createSheet(user.uid)
+                navigate(`/admin/sheet?id=${sheet}`)
+              }}
+            >
+              QRコードシートを作成
+            </ButtonWithLoading>
+            <ButtonWithLoading
+              width="full"
+              m="2"
+              onClick={() => logout()}
+            >
+              ログアウト
+            </ButtonWithLoading>
+          </>
+        )}
       </FirebaseAuthProtector>
     </CommonLayout>
   )
