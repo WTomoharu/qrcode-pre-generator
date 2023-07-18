@@ -51,7 +51,11 @@ export const Page = () => {
               textAlign="center"
               pb="4"
             >
-              {user.email}でログイン中
+              {user.email ? (
+                user.email + "でログイン中"
+              ) : (
+                "ゲストとしてログイン中"
+              )}
             </Text>
             <ButtonWithLoading
               width="full"
@@ -63,6 +67,7 @@ export const Page = () => {
             >
               QRコードシートを作成
             </ButtonWithLoading>
+            {}
             <ButtonWithLoading
               width="full"
               m="2"

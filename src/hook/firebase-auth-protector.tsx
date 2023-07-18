@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { User } from "firebase/auth"
+import { signInAnonymously, User } from "firebase/auth"
 import { useFirebaseAuthContext } from "./firebase-auth"
 import { Button, Text } from "@chakra-ui/react"
 
@@ -9,8 +9,12 @@ import { LoadingSpinner } from "../component/loading-spinner"
 import { CommonStaticModal } from "../component/common-modal"
 
 export const FirebaseAuthLoginPopup = () => {
-  const onClickLoginButton = () => {
+  const onClickGoogleLoginButton = () => {
     signInWithRedirect(auth, provider.google)
+  }
+
+  const onClickAnonymousLoginButton = () => {
+    signInAnonymously(auth)
   }
 
   return (
@@ -19,10 +23,17 @@ export const FirebaseAuthLoginPopup = () => {
         このページを表示するにはログインが必要です
       </Text>
       <Button
-        onClick={onClickLoginButton}
         width="full"
+        mb="4"
+        onClick={onClickGoogleLoginButton}
       >
-        sign in with google
+        Googleアカウントでログイン
+      </Button>
+      <Button
+        width="full"
+        onClick={onClickAnonymousLoginButton}
+      >
+        ゲストとしてログイン
       </Button>
     </CommonStaticModal>
   )
