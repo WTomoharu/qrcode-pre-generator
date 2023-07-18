@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react"
+import { Button, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react"
 import useSWR from "swr"
 
 import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
@@ -13,7 +13,9 @@ import { minTime } from "../../lib/utils"
 import { CommonLayout } from "../../component/common-layout"
 
 type QRCodeEditorModalProps = {
-  qrcode: QRCode,
+  isOpen: boolean
+  onClose: () => void
+  qrcode: QRCode,  
   onSubmit?: (data: { url: string | null }) => Promise<void> | void
 }
 
@@ -22,8 +24,8 @@ const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
 
   return (
     <Modal
-      isOpen={true}
-      onClose={() => { }}
+      isOpen={props.isOpen}
+      onClose={props.onClose}
     >
       <ModalOverlay />
       <ModalContent>
@@ -44,7 +46,9 @@ const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
 
         <ModalFooter>
           <ButtonWithLoading colorScheme='blue' mr={3} onClick={() => {
-            return props.onSubmit?.({ url })
+            return Promise.resolve(props.onSubmit?.({ url })).then(async () => {
+              props.onClose()
+            })
           }}>
             変更する
           </ButtonWithLoading>
@@ -55,7 +59,9 @@ const QRCodeEditorModal = (props: QRCodeEditorModalProps) => {
 
 }
 
-const QRCodeEditorPage = (props: { uid: string, qrcode: string }) => {
+const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string }) => {
+  const [isOpenEditorModal, setIsOpenEditorModal] = useState(props.mode === "edit_url")
+
   const navigate = useNavigate()
 
   const qrcodeRef = doc(qrcodeCollection, props.qrcode)
@@ -100,18 +106,41 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string }) => {
     )
   } else {
     return (
-      <QRCodeEditorModal
-        qrcode={qrcodeData} 
-        onSubmit={(data) => {
-          return minTime(updateDoc(qrcodeRef, {
-            url: data.url ? data.url : null
-          }), 500).then(() => {
-            navigate("/admin")
-          }).catch(err => {
-            console.error(err)
-          })
-        }}
-      />
+      <>
+        <Heading
+          fontSize="2xl"
+          textAlign="center"
+          py="2"
+        >
+          QRコード管理ページ
+        </Heading>
+        <Text
+          textAlign="center"
+          pb="4"
+        >
+          (QRCode ID: {props.qrcode})
+        </Text>
+        <Button
+          width="full"
+          onClick={() => {
+            setIsOpenEditorModal(true)
+          }}
+        >
+          QRコードのリンクURLを編集
+        </Button>
+        <QRCodeEditorModal
+          isOpen={isOpenEditorModal}
+          onClose={() => setIsOpenEditorModal(false)}
+          qrcode={qrcodeData}
+          onSubmit={(data) => {
+            return minTime(updateDoc(qrcodeRef, {
+              url: data.url ? data.url : null
+            }), 500).catch(err => {
+              console.error(err)
+            })
+          }}
+        />
+      </>
     )
   }
 }
@@ -129,11 +158,13 @@ export const AdminQRCodePage = () => {
     return null
   }
 
+  const mode = params.get("mode") ?? undefined
+
   return (
     <CommonLayout>
       <FirebaseAuthProtector>
         {user => (
-          <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} />
+          <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} mode={mode} />
         )}
       </FirebaseAuthProtector>
     </CommonLayout>
