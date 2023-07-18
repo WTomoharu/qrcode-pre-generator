@@ -17,7 +17,7 @@ export const CommonLayout = (props: { children?: ReactNode }) => {
           py="2"
 
         >
-          Qrcode Pre-Generator
+          QRCode Pre-Generator
         </Text>
       </Box>
       <Box as="main" px="4" flexGrow="1" display="flex" flexDir="column">
