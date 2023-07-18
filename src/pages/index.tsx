@@ -1,7 +1,8 @@
-import { Box, Button, Heading, Text } from "@chakra-ui/react"
+import { Button, Heading, Text } from "@chakra-ui/react"
 import { doc, getDoc } from "firebase/firestore"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useSWR from "swr"
+import { CommonLayout } from "../component/common-layout"
 import { CommonStaticModal } from "../component/common-modal"
 import { qrcodeCollection } from "../lib/firestore"
 
@@ -58,31 +59,21 @@ export const IndexPage = () => {
   const id = params.get("id")
 
   return (
-    <Box 
-      bg="gray.200"
-    >
-      <Box 
-        maxW={{ base: undefined, md: 440 }} 
-        minH="100vh"
-        bg="white"
-        margin="0 auto"
-        px="4"
-      >
-        {id ? (
-          <QRCodeRedirectPage id={id} />
-        ) : (
-          <>
-            <Heading
-              fontSize="2xl"
-              textAlign="center"
-              py="2"
-            >
-              Qrcode Pre-Generator
-            </Heading>
-          </>
-        )}
-      </Box>
-    </Box>
+    <CommonLayout>
+      {id ? (
+        <QRCodeRedirectPage id={id} />
+      ) : (
+        <>
+          <Heading
+            fontSize="2xl"
+            textAlign="center"
+            py="2"
+          >
+            Qrcode Pre-Generator
+          </Heading>
+        </>
+      )}
+    </CommonLayout>
   )
 }
 
