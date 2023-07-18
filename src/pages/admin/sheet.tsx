@@ -1,5 +1,5 @@
 import { css, Global } from "@emotion/react"
-import { Box, Button, Center, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Button, Center, Heading, Link, SimpleGrid, Text } from "@chakra-ui/react"
 import useSWR from "swr"
 
 import QRCode from "react-qr-code"
@@ -7,11 +7,12 @@ import QRCode from "react-qr-code"
 import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
 import { getRandomId } from "../../lib/id"
 import { range } from "../../lib/utils"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { Link as ReactLink, useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { sheetCollection } from "../../lib/firestore"
 import { CommonLayout } from "../../component/common-layout"
 import { useEffect } from "react"
+import { CommonStaticModal } from "../../component/common-modal"
 
 const SheetPrintView = () => {
   return (
@@ -54,6 +55,70 @@ const SheetPrintView = () => {
   )
 }
 
+const SheetInfomationPage = (props: { uid: string, sheet: string }) => {
+  const sheetRef = doc(sheetCollection, props.sheet)
+
+  const { data: sheetSnapshot } = useSWR(sheetRef.path, () => {
+    return getDoc(sheetRef)
+  }, { suspense: true })
+
+  const sheetData = sheetSnapshot.data()
+
+  if (!sheetData) {
+    return (
+      <CommonStaticModal title="エラー">
+        <Text mb="4">
+          指定されたシートは存在しません。
+        </Text>
+        <Link as={ReactLink} to="/admin">
+          <Button width="full" m="2">
+            トップページに戻る
+          </Button>
+        </Link>
+      </CommonStaticModal>
+    )
+  } else if (sheetData.uid !== props.uid) {
+    return (
+      <CommonStaticModal title="エラー">
+        <Text mb="4">
+          このシートを操作する権限がありません
+        </Text>
+        <Link as={ReactLink} to="/admin">
+          <Button width="full" m="2">
+            トップページに戻る
+          </Button>
+        </Link>
+      </CommonStaticModal>
+    )
+  } else {
+    return (
+      <>
+        <Heading
+          fontSize="2xl"
+          textAlign="center"
+          py="2"
+        >
+          シート管理ページ
+        </Heading>
+        <Text
+          textAlign="center"
+          pb="4"
+        >
+          (Sheet ID: {props.sheet})
+        </Text>
+        <Button
+          width="full"
+          onClick={() => {
+            window.print()
+          }}
+        >
+          シートを印刷
+        </Button>
+      </>
+    )
+  }
+}
+
 export const Page = () => {
   const navigate = useNavigate()
   const [params] = useSearchParams()
@@ -67,18 +132,10 @@ export const Page = () => {
     return null
   }
 
-  const sheetRef = doc(sheetCollection, sheetId)
-
-  const sheet = useSWR(sheetRef.path, () => {
-    return getDoc(sheetRef)
-  }, { suspense: true })
-
-  console.log(sheet)
-
   return (
     <CommonLayout>
       <FirebaseAuthProtector>
-        {() => (
+        {user => (
           <>
             <Box css={css`
               display: none;
@@ -96,12 +153,10 @@ export const Page = () => {
                 display: none;
               }
             `}>
-              <Button onClick={() => {
-                window.print()
-              }}>
-                {sheet.data.data()!.uid}
-                印刷
-              </Button>
+              <SheetInfomationPage
+                uid={user.uid}
+                sheet={sheetId}
+              />
             </Box>
           </>
         )}
