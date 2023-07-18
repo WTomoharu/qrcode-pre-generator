@@ -2,7 +2,7 @@ import { Center, Spinner, Text } from "@chakra-ui/react"
 
 export const LoadingSpinner = (props: { text?: string }) => {
   return (
-    <Center minH="100vh" flexDir="column">
+    <Center flexGrow="1" flexDir="column">
       <Spinner
         thickness='4px'
         speed='0.65s'

@@ -22,6 +22,8 @@ const Layout = (props: { children?: ReactNode }) => {
         minH="100vh"
         bg="white"
         margin="0 auto"
+        display="flex"
+        flexDir="column"
       >
         {props.children}
       </Box>

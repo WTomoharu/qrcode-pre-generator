@@ -20,7 +20,7 @@ export const CommonLayout = (props: { children?: ReactNode }) => {
           Qrcode Pre-Generator
         </Text>
       </Box>
-      <Box as="main" px="4">
+      <Box as="main" px="4" flexGrow="1" display="flex" flexDir="column">
         {props.children}
       </Box>
     </>
