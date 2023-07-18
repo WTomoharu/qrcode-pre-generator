@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react"
+import { Box, Button, Heading, Text } from "@chakra-ui/react"
 import { doc, getDoc } from "firebase/firestore"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useSWR from "swr"
@@ -58,17 +58,32 @@ export const IndexPage = () => {
   const id = params.get("id")
 
   return (
-    <>
-      {id ? (
-        <QRCodeRedirectPage id={id} />
-      ) : (
-        <>
-          <h1>Qrcode Pre-Generator</h1>
-        </>
-      )}
-    </>
+    <Box 
+      bg="gray.200"
+    >
+      <Box 
+        maxW={{ base: undefined, md: 440 }} 
+        minH="100vh"
+        bg="white"
+        margin="0 auto"
+        px="4"
+      >
+        {id ? (
+          <QRCodeRedirectPage id={id} />
+        ) : (
+          <>
+            <Heading
+              fontSize="2xl"
+              textAlign="center"
+              py="2"
+            >
+              Qrcode Pre-Generator
+            </Heading>
+          </>
+        )}
+      </Box>
+    </Box>
   )
-
 }
 
 export default IndexPage
