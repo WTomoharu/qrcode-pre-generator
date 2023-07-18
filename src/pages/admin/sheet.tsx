@@ -11,6 +11,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { sheetCollection } from "../../lib/firestore"
 import { CommonLayout } from "../../component/common-layout"
+import { useEffect } from "react"
 
 const SheetPrintView = () => {
   return (
@@ -60,8 +61,10 @@ export const Page = () => {
   const sheetId = params.get("id")
 
   if (!sheetId) {
-    navigate("/admin")
-    return
+    useEffect(() => {
+      navigate("/admin")
+    }, [])
+    return null
   }
 
   const sheetRef = doc(sheetCollection, sheetId)

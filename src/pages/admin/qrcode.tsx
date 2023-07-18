@@ -7,7 +7,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { qrcodeCollection } from "../../lib/firestore"
 import { CommonStaticModal } from "../../component/common-modal"
 import { QRCode } from "../../lib/types"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ButtonWithLoading } from "../../component/button-with-loading"
 import { minTime } from "../../lib/utils"
 import { CommonLayout } from "../../component/common-layout"
@@ -123,8 +123,10 @@ export const AdminQRCodePage = () => {
   const qrcodeId = params.get("id")
 
   if (!qrcodeId) {
-    navigate("/admin")
-    return
+    useEffect(() => {
+      navigate("/admin")
+    }, [])
+    return null
   }
 
   return (
