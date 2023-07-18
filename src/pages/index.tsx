@@ -1,6 +1,6 @@
-import { Button, Heading, Text } from "@chakra-ui/react"
+import { Button, Heading, Link, Text } from "@chakra-ui/react"
 import { doc, getDoc } from "firebase/firestore"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { Link as ReactLink, useNavigate, useSearchParams } from "react-router-dom"
 import useSWR from "swr"
 import { CommonLayout } from "../component/common-layout"
 import { CommonStaticModal } from "../component/common-modal"
@@ -71,6 +71,14 @@ export const IndexPage = () => {
           >
             Top Page
           </Heading>
+          <Link as={ReactLink} to="/admin">
+            <Button width="full" m="2">
+              管理者画面
+            </Button>
+          </Link>
+          <Button width="full" m="2" disabled>
+            IDからリンク先に行く
+          </Button>
         </>
       )}
     </CommonLayout>
