@@ -69,7 +69,7 @@ export const IndexPage = () => {
             textAlign="center"
             py="2"
           >
-            Qrcode Pre-Generator
+            Top Page
           </Heading>
         </>
       )}

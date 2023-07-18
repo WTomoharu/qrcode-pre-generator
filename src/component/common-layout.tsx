@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Box } from "@chakra-ui/react"
+import { Box, Text } from "@chakra-ui/react"
 
 export const CommonLayout = (props: { children?: ReactNode }) => {
   return (
@@ -11,9 +11,21 @@ export const CommonLayout = (props: { children?: ReactNode }) => {
         minH="100vh"
         bg="white"
         margin="0 auto"
-        px="4"
       >
-        {props.children}
+        <Box as="header" bg="green.600">
+          <Text
+            fontSize="2xl"
+            color="white"
+            textAlign="center"
+            py="2"
+            
+          >
+            Qrcode Pre-Generator
+          </Text>
+        </Box>
+        <Box as="main" px="4">
+          {props.children}
+        </Box>
       </Box>
     </Box>
   )

@@ -7,6 +7,7 @@ import { addDocSafely, firestore } from "../../lib/firestore"
 import { range } from "../../lib/utils"
 import { useNavigate } from "react-router-dom"
 import { ButtonWithLoading } from "../../component/button-with-loading"
+import { CommonLayout } from "../../component/common-layout"
 
 async function logout() {
   return signOut(auth).catch(console.error)
@@ -35,7 +36,7 @@ export const Page = () => {
   const navigate = useNavigate()
 
   return (
-    <>
+    <CommonLayout>
       <FirebaseAuthProtector>
         {(user) => (
             <>
@@ -54,7 +55,7 @@ export const Page = () => {
             </>
           )}
       </FirebaseAuthProtector>
-    </>
+    </CommonLayout>
   )
 }
 export default Page

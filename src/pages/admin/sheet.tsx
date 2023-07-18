@@ -10,6 +10,7 @@ import { range } from "../../lib/utils"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { sheetCollection } from "../../lib/firestore"
+import { CommonLayout } from "../../component/common-layout"
 
 const SheetPrintView = () => {
   return (
@@ -72,7 +73,7 @@ export const Page = () => {
   console.log(sheet)
 
   return (
-    <>
+    <CommonLayout>
       <FirebaseAuthProtector>
         {() => (
           <>
@@ -102,7 +103,7 @@ export const Page = () => {
           </>
         )}
       </FirebaseAuthProtector>
-    </>
+    </CommonLayout>
   )
 }
 export default Page

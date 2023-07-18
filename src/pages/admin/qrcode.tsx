@@ -10,6 +10,7 @@ import { QRCode } from "../../lib/types"
 import { useState } from "react"
 import { ButtonWithLoading } from "../../component/button-with-loading"
 import { minTime } from "../../lib/utils"
+import { CommonLayout } from "../../component/common-layout"
 
 type QRCodeEditorModalProps = {
   qrcode: QRCode,
@@ -127,13 +128,13 @@ export const AdminQRCodePage = () => {
   }
 
   return (
-    <>
+    <CommonLayout>
       <FirebaseAuthProtector>
         {user => (
           <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} />
         )}
       </FirebaseAuthProtector>
-    </>
+    </CommonLayout>
   )
 }
 export default AdminQRCodePage
