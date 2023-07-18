@@ -7,7 +7,7 @@ export const CommonLayout = (props: { children?: ReactNode }) => {
       bg="gray.200"
     >
       <Box
-        maxW={{ base: undefined, md: 440 }}
+        maxW={{ base: undefined, sm: 420 }}
         minH="100vh"
         bg="white"
         margin="0 auto"
