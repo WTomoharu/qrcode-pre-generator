@@ -1,5 +1,6 @@
 import { Button, Heading, Link, Text } from "@chakra-ui/react"
 import { doc, getDoc } from "firebase/firestore"
+import { useEffect } from "react"
 import { Link as ReactLink, useNavigate, useSearchParams } from "react-router-dom"
 import useSWR from "swr"
 import { CommonLayout } from "../component/common-layout"
@@ -34,21 +35,10 @@ export const QRCodeRedirectPage = (props: { id: string }) => {
       </CommonStaticModal>
     )
   } else if (!qrcodeData.url) {
-    return (
-      <CommonStaticModal title="エラー">
-        <Text mb="4">
-          このQRコードには、リンク先が設定されていません。
-        </Text>
-        <Button
-          onClick={() => {
-            navigate("/admin/qrcode?id=" + props.id)
-          }}
-          width="full"
-        >
-          リンクを設定する
-        </Button>
-      </CommonStaticModal>
-    )
+    useEffect(() => {
+      navigate("/admin/qrcode?id=" + props.id + "&mode=edit_url")
+    }, [])
+    return null
   } else {
     location.href = qrcodeData.url
     return null
