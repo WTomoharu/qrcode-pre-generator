@@ -39,7 +39,12 @@ export const FirebaseAuthLoginPopup = () => {
   )
 }
 
-export const FirebaseAuthProtector = (props: { children?: ReactNode | ((user: User) => ReactNode) }) => {
+type FirebaseAuthProtectorProps = {
+  children: ReactNode | ((user: User) => ReactNode)
+  form?: ReactNode | (() => ReactNode)
+}
+
+export const FirebaseAuthProtector = (props: FirebaseAuthProtectorProps) => {
   const { user } = useFirebaseAuthContext()
 
   if (user === undefined) {
@@ -47,9 +52,17 @@ export const FirebaseAuthProtector = (props: { children?: ReactNode | ((user: Us
       <LoadingSpinner text="auth" />
     )
   } else if (user === null) {
-    return (
-      <FirebaseAuthLoginPopup />
-    )
+    if (!props.form) {
+      return (
+        <>
+          {props.form}
+        </>
+      )
+    } else {
+      return (
+        <FirebaseAuthLoginPopup />
+      )
+    }
   } else {
     if (typeof props.children === "function") {
       return (
