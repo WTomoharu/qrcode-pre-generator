@@ -5,16 +5,26 @@ import useSWR from "swr"
 import QRCode from "react-qr-code"
 
 import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
-import { getRandomId } from "../../lib/id"
-import { range } from "../../lib/utils"
 import { Link as ReactLink, useNavigate, useSearchParams } from "react-router-dom"
-import { doc, getDoc } from "firebase/firestore"
-import { sheetCollection } from "../../lib/firestore"
+import { doc, getDoc, getDocs, query, where } from "firebase/firestore"
+import { qrcodeCollection, sheetCollection } from "../../lib/firestore"
 import { CommonLayout } from "../../component/common-layout"
 import { useEffect } from "react"
 import { CommonStaticModal } from "../../component/common-modal"
 
-const SheetPrintView = () => {
+const SheetPrintView = (props: { uid: string, sheet: string }) => {
+  const qrcodesRef = query(
+    qrcodeCollection,
+    where("uid", "==", props.uid),
+    where("sheet", "==", props.sheet)
+  )
+
+  const { data: qrcodesSnapshot } = useSWR(`/qrcodes?sheet=${props.sheet}&uid=${props.uid}`, () => {
+    return getDocs(qrcodesRef)
+  }, { suspense: true })
+
+  const qrcodeIds = qrcodesSnapshot.docs.map(doc => doc.id)
+
   return (
     <div>
       <Global styles={css`
@@ -31,7 +41,7 @@ const SheetPrintView = () => {
         row={12}
         columns={2}
       >
-        {range(10 * 2).map(() => getRandomId()).map(id => (
+        {qrcodeIds.map(id => (
           <Center w="100%" h="100%" padding="4" key={id}>
             <QRCode
               size={48}
@@ -144,7 +154,10 @@ export const Page = () => {
                 display: block
               }
             `}>
-              <SheetPrintView />
+              <SheetPrintView
+                uid={user.uid}
+                sheet={sheetId}
+              />
             </Box>
             <Box css={css`
               display: block;
