@@ -222,6 +222,7 @@ const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
             })
           }}
           width="full"
+          mb="2"
         >
           ログインして編集する
         </Button>
@@ -236,7 +237,7 @@ const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
       </CommonStaticModal>
     )
   } else {
-    return null
+    return undefined
   }
 }
 
@@ -268,7 +269,7 @@ export const AdminQRCodePage = () => {
   return (
     <CommonLayout>
       <FirebaseAuthProtector form={(
-        <QRCodeAuthForm qrcode={qrcodeData} />
+        QRCodeAuthForm({ qrcode: qrcodeData })
       )}>
         {user => (
           <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} mode={mode} />
