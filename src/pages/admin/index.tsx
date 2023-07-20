@@ -18,7 +18,7 @@ async function createSheet(uid: string) {
     uid,
   })
 
-  const qrcodes = await Promise.all(range(5).map(() => {
+  const qrcodes = await Promise.all(range(10 * 2).map(() => {
     return addDocSafely(collection(firestore, "/qrcodes"), {
       uid,
       sheet: sheet.id,
