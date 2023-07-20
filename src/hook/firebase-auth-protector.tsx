@@ -52,7 +52,7 @@ export const FirebaseAuthProtector = (props: FirebaseAuthProtectorProps) => {
       <LoadingSpinner text="auth" />
     )
   } else if (user === null) {
-    if (!props.form) {
+    if (props.form) {
       return (
         <>
           {props.form}
