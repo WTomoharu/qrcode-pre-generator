@@ -49,13 +49,19 @@ export const Page = () => {
             </Heading>
             <Text
               textAlign="center"
-              pb="4"
+              pb="2"
             >
               {user.email ? (
                 user.email + "でログイン中"
               ) : (
                 "ゲストとしてログイン中"
               )}
+            </Text>
+            <Text
+              textAlign="center"
+              pb="4"
+            >
+              (User ID: {user.uid})
             </Text>
             <ButtonWithLoading
               width="full"
