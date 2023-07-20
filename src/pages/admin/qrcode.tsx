@@ -96,7 +96,7 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
         </Button>
       </CommonStaticModal>
     )
-  } else if (qrcodeData.uid !== props.uid && !qrcodeData.url && props.mode === "edit_url") {
+  } else if (qrcodeData.uid !== props.uid && !qrcodeData.url) {
     return (
       <CommonStaticModal title="エラー">
         <Text mb="4">
@@ -186,6 +186,61 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
   }
 }
 
+const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
+  const navigate = useNavigate()
+  const [params, setParams] = useSearchParams()
+
+  const mode = params.get("mode") ?? undefined
+
+  if (!props.qrcode) {
+    return (
+      <CommonStaticModal title="エラー">
+        <Text mb="4">
+          指定されたQRコードは存在しません。
+        </Text>
+        <Button
+          onClick={() => {
+            navigate("/")
+          }}
+          width="full"
+        >
+          トップページに戻る
+        </Button>
+      </CommonStaticModal>
+    )
+  } else if (!props.qrcode.url && mode === "edit_url") {
+    return (
+      <CommonStaticModal title="エラー">
+        <Text mb="4">
+          このQRコードはURLが設定されておりません。
+        </Text>
+        <Button
+          onClick={() => {
+            setParams(params => {
+              params.delete("mode")
+              return params
+            })
+          }}
+          width="full"
+        >
+          ログインして編集する
+        </Button>
+        <Button
+          onClick={() => {
+            navigate("/")
+          }}
+          width="full"
+        >
+          トップページに戻る
+        </Button>
+      </CommonStaticModal>
+    )
+  } else {
+    return null
+  }
+}
+
+
 export const AdminQRCodePage = () => {
   const navigate = useNavigate()
   const [params] = useSearchParams()
@@ -201,9 +256,20 @@ export const AdminQRCodePage = () => {
 
   const mode = params.get("mode") ?? undefined
 
+  const qrcodeRef = doc(qrcodeCollection, qrcodeId)
+
+  const { data: qrcodeSnapshot } = useSWR(qrcodeRef.path, () => {
+    return getDoc(qrcodeRef)
+  }, { suspense: true })
+
+  const qrcodeData = qrcodeSnapshot.data()
+
+
   return (
     <CommonLayout>
-      <FirebaseAuthProtector>
+      <FirebaseAuthProtector form={(
+        <QRCodeAuthForm qrcode={qrcodeData} />
+      )}>
         {user => (
           <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} mode={mode} />
         )}
