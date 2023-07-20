@@ -188,7 +188,7 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
 
 const QRCodeAuthForm = (props: { qrcode?: QRCode, mode?: string }) => {
   const navigate = useNavigate()
-  const [isOpenLoginPopup] = useState(false)
+  const [isOpenLoginPopup, setIsOpenLoginPopup] = useState(false)
 
   if (isOpenLoginPopup) {
     return (
@@ -218,7 +218,7 @@ const QRCodeAuthForm = (props: { qrcode?: QRCode, mode?: string }) => {
         </Text>
         <Button
           onClick={() => {
-            useState(true)
+            setIsOpenLoginPopup(true)
           }}
           width="full"
           mb="2"
