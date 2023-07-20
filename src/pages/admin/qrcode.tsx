@@ -1,7 +1,7 @@
 import { Button, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react"
 import useSWR from "swr"
 
-import { FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
+import { FirebaseAuthLoginPopup, FirebaseAuthProtector } from "../../hook/firebase-auth-protector"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { qrcodeCollection } from "../../lib/firestore"
@@ -186,13 +186,15 @@ const QRCodeEditorPage = (props: { uid: string, qrcode: string, mode?: string })
   }
 }
 
-const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
+const QRCodeAuthForm = (props: { qrcode?: QRCode, mode?: string }) => {
   const navigate = useNavigate()
-  const [params, setParams] = useSearchParams()
+  const [isOpenLoginPopup] = useState(false)
 
-  const mode = params.get("mode") ?? undefined
-
-  if (!props.qrcode) {
+  if (isOpenLoginPopup) {
+    return (
+      <FirebaseAuthLoginPopup />
+    )
+  } else if (!props.qrcode) {
     return (
       <CommonStaticModal title="エラー">
         <Text mb="4">
@@ -208,7 +210,7 @@ const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
         </Button>
       </CommonStaticModal>
     )
-  } else if (!props.qrcode.url && mode === "edit_url") {
+  } else if (!props.qrcode.url && props.mode === "edit_url") {
     return (
       <CommonStaticModal title="エラー">
         <Text mb="4">
@@ -216,10 +218,7 @@ const QRCodeAuthForm = (props: { qrcode?: QRCode }) => {
         </Text>
         <Button
           onClick={() => {
-            setParams(params => {
-              params.delete("mode")
-              return params
-            })
+            useState(true)
           }}
           width="full"
           mb="2"
@@ -269,7 +268,7 @@ export const AdminQRCodePage = () => {
   return (
     <CommonLayout>
       <FirebaseAuthProtector form={(
-        QRCodeAuthForm({ qrcode: qrcodeData })
+        QRCodeAuthForm({ qrcode: qrcodeData, mode })
       )}>
         {user => (
           <QRCodeEditorPage uid={user.uid} qrcode={qrcodeId} mode={mode} />
